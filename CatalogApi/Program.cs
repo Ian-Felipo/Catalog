@@ -8,7 +8,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<CatalogApiDbContext>(options =>
     {
-        string? connectionString = builder.Configuration.GetConnectionString("MySqlConnection");
+        string? connectionString = builder.Configuration["ConnectionStrings:MySql"];
         options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 );
