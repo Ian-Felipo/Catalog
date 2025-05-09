@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/Ian/dev/Catalog/CatalogApi/CatalogApi.csproj": {}
+    "/home/ian_felippo/dev/Catalog/CatalogApi/CatalogApi.csproj": {}
   },
   "projects": {
-    "/home/Ian/dev/Catalog/CatalogApi/CatalogApi.csproj": {
+    "/home/ian_felippo/dev/Catalog/CatalogApi/CatalogApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/Ian/dev/Catalog/CatalogApi/CatalogApi.csproj",
+        "projectUniqueName": "/home/ian_felippo/dev/Catalog/CatalogApi/CatalogApi.csproj",
         "projectName": "CatalogApi",
-        "projectPath": "/home/Ian/dev/Catalog/CatalogApi/CatalogApi.csproj",
-        "packagesPath": "/home/Ian/.nuget/packages/",
-        "outputPath": "/home/Ian/dev/Catalog/CatalogApi/obj/",
+        "projectPath": "/home/ian_felippo/dev/Catalog/CatalogApi/CatalogApi.csproj",
+        "packagesPath": "/home/ian_felippo/.nuget/packages/",
+        "outputPath": "/home/ian_felippo/dev/Catalog/CatalogApi/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/Ian/.nuget/NuGet/NuGet.Config"
+          "/home/ian_felippo/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -32,13 +32,7 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -80,20 +74,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.14, 8.0.14]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.linux-x64",
-              "version": "[8.0.14, 8.0.14]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.14, 8.0.14]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -102,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/Ian/.dotnet/sdk/9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.115/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
