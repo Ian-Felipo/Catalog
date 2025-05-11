@@ -44,5 +44,58 @@ namespace CatalogApi.Controllers
 
             return Ok(product);
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public ActionResult<Product> Create([FromBody] Product productCreate)
+        {
+            _catalogApiDbContext.Products.Add(productCreate);
+            _catalogApiDbContext.SaveChanges();
+            return CreatedAtAction(nameof(Create), new { id = productCreate.Id }, productCreate);
+        }
+
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<Product> Update([FromRoute] int id, [FromBody] Product productUpdate)
+        {
+            Product? product = _catalogApiDbContext.Products.FirstOrDefault(product => product.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product.Name = productUpdate.Name;
+            product.Description = productUpdate.Description;
+            product.Price = productUpdate.Price;
+            product.ImageUrl = productUpdate.ImageUrl;
+            product.Stock = productUpdate.Stock;
+            product.RegistrationDate = productUpdate.RegistrationDate;
+            product.CategoryId = productUpdate.CategoryId;
+            product.Category = productUpdate.Category;
+
+            _catalogApiDbContext.SaveChanges();
+
+            return Ok(product);
+        }
+
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<Product> Delete([FromRoute] int id)
+        {
+            Product? product = _catalogApiDbContext.Products.FirstOrDefault(product => product.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            _catalogApiDbContext.Products.Remove(product);
+            _catalogApiDbContext.SaveChanges();
+
+            return Ok(product);
+        }
     }
 }
