@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using CatalogApi.Data;
 using CatalogApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogApi.Controllers
 {
-    [Route("[controller]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -30,10 +31,10 @@ namespace CatalogApi.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name="GetProduct")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Product> Get([FromRoute] int id)
+        public ActionResult<Product> Get(int id)
         {
             Product? product = _catalogApiDbContext.Products.FirstOrDefault(product => product.Id == id);
 
@@ -48,43 +49,33 @@ namespace CatalogApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<Product> Create([FromBody] Product productCreate)
+        public ActionResult<Product> Post(Product product)
         {
-            _catalogApiDbContext.Products.Add(productCreate);
+            _catalogApiDbContext.Products.Add(product);
             _catalogApiDbContext.SaveChanges();
-            return CreatedAtAction(nameof(Create), new { id = productCreate.Id }, productCreate);
+            return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
         }
 
         [HttpPut("{id:int}")]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Product> Update([FromRoute] int id, [FromBody] Product productUpdate)
+        public ActionResult<Product> Put(int id, Product product)
         {
-            Product? product = _catalogApiDbContext.Products.FirstOrDefault(product => product.Id == id);
-
-            if (product == null)
+            if (id != product.Id)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            product.Name = productUpdate.Name;
-            product.Description = productUpdate.Description;
-            product.Price = productUpdate.Price;
-            product.ImageUrl = productUpdate.ImageUrl;
-            product.Stock = productUpdate.Stock;
-            product.RegistrationDate = productUpdate.RegistrationDate;
-            product.CategoryId = productUpdate.CategoryId;
-            product.Category = productUpdate.Category;
-
+            _catalogApiDbContext.Entry(product).State = EntityState.Modified;
             _catalogApiDbContext.SaveChanges();
-
+           
             return Ok(product);
         }
 
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Product> Delete([FromRoute] int id)
+        public ActionResult<Product> Delete(int id)
         {
             Product? product = _catalogApiDbContext.Products.FirstOrDefault(product => product.Id == id);
 

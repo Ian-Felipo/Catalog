@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogApi.Migrations
 {
     [DbContext(typeof(CatalogApiDbContext))]
-    [Migration("20250509170537_AddingDataAnnotations")]
+    [Migration("20250509005813_AddingDataAnnotations")]
     partial class AddingDataAnnotations
     {
         /// <inheritdoc />
