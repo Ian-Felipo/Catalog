@@ -46,6 +46,7 @@ namespace CatalogApi.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Product> Create([FromBody] Product productCreate)
         {
