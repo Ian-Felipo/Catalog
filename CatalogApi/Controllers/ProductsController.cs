@@ -66,7 +66,7 @@ namespace CatalogApi.Controllers
                 return BadRequest();
             }
 
-            _catalogApiDbContext.Entry(product).State = EntityState.Modified;
+            _catalogApiDbContext.Entry(product).State = EntityState.Modified; // *******************************************
             _catalogApiDbContext.SaveChanges();
            
             return Ok(product);

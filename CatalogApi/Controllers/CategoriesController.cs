@@ -1,6 +1,7 @@
 using CatalogApi.Data;
 using CatalogApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogApi.Controllers
 {
@@ -47,6 +48,46 @@ namespace CatalogApi.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(2)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<Category> Post(Category category)
+        {
+            _catalogApiDbContext.Categories.Add(category);
+            _catalogApiDbContext.SaveChanges();
+            return Ok(category);
+        }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<Category> Put(int id, Category category)
+        {
+            if (id != category.Id)
+            {
+                return BadRequest();
+            }
+
+            _catalogApiDbContext.Entry(category).State = EntityState.Modified;
+            _catalogApiDbContext.SaveChanges();
+
+            return Ok(category);   
+        }
+
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<Category> Delete(int id)
+        {
+            Category? category = _catalogApiDbContext.Categories.FirstOrDefault(category => category.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            _catalogApiDbContext.Categories.Remove(category);
+            _catalogApiDbContext.SaveChanges();
+
+            return Ok(category);
+        }
     }   
 }
