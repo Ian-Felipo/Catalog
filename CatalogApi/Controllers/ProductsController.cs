@@ -31,7 +31,7 @@ namespace CatalogApi.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id:int}", Name="GetProduct")]
+        [HttpGet("{id:int:min(1)}", Name="GetProduct")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Product> Get(int id)
@@ -56,7 +56,7 @@ namespace CatalogApi.Controllers
             return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Product> Put(int id, Product product)
@@ -79,7 +79,7 @@ namespace CatalogApi.Controllers
             return Ok(product);
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Product> Delete(int id)
