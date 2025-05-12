@@ -66,9 +66,16 @@ namespace CatalogApi.Controllers
                 return BadRequest();
             }
 
-            _catalogApiDbContext.Entry(product).State = EntityState.Modified; // *******************************************
-            _catalogApiDbContext.SaveChanges();
-           
+            try
+            {
+                _catalogApiDbContext.Entry(product).State = EntityState.Modified; // *******************************************
+                _catalogApiDbContext.SaveChanges();
+            }
+            catch 
+            {
+                return BadRequest($"Nao existe uma Categoria com o Id {id} no banco de dados");
+            }
+
             return Ok(product);
         }
 
