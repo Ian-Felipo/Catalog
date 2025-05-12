@@ -19,7 +19,7 @@ namespace CatalogApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<Category>> Get()
+        public ActionResult<IEnumerable<Category>> GetCategories()
         {
             List<Category> categories = _catalogApiDbContext.Categories.ToList();
 
@@ -34,7 +34,7 @@ namespace CatalogApi.Controllers
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Category> Get(int id)
+        public ActionResult<Category> GetCategory(int id)
         {
             Category? category = _catalogApiDbContext.Categories.FirstOrDefault(category => category.Id == id);
 
@@ -45,6 +45,36 @@ namespace CatalogApi.Controllers
 
             return Ok(category);
         }
+
+        [HttpGet("products")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<Category>> GetCategoriesProducts()
+        {
+            List<Category> categories = _catalogApiDbContext.Categories.Include(category => category.Products).ToList();
+
+            if (categories == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(categories);
+        }
+
+        [HttpGet("{id:int}/products")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<Category> GetCategoryProducts(int id)
+        {
+            Category? category = _catalogApiDbContext.Categories.Include(category => category.Products).FirstOrDefault(category => category.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(category);
+        } 
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
