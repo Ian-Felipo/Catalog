@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace CatalogApi.Models;
 
@@ -20,5 +21,6 @@ public class Category
     [Required]
     [StringLength(300)]
     public string? ImageUrl { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<Product> Products { get; set; }
 }
