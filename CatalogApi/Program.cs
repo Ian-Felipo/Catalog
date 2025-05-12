@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using CatalogApi.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,7 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+
+builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddDbContext<CatalogApiDbContext>(options =>
     {
