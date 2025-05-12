@@ -21,7 +21,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Product>> Get()
         {
-            List<Product> products = _catalogApiDbContext.Products.ToList();
+            List<Product> products = _catalogApiDbContext.Products.AsNoTracking().ToList();
 
             if (products == null)
             {
@@ -36,7 +36,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Product> Get(int id)
         {
-            Product? product = _catalogApiDbContext.Products.FirstOrDefault(product => product.Id == id);
+            Product? product = _catalogApiDbContext.Products.AsNoTracking().FirstOrDefault(product => product.Id == id);
 
             if (product == null)
             {

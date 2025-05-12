@@ -21,7 +21,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategories()
         {
-            List<Category> categories = _catalogApiDbContext.Categories.ToList();
+            List<Category> categories = _catalogApiDbContext.Categories.AsNoTracking().ToList();
 
             if (categories == null)
             {
@@ -36,7 +36,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategory(int id)
         {
-            Category? category = _catalogApiDbContext.Categories.FirstOrDefault(category => category.Id == id);
+            Category? category = _catalogApiDbContext.Categories.AsNoTracking().FirstOrDefault(category => category.Id == id);
 
             if (category == null)
             {
@@ -51,7 +51,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategoriesProducts()
         {
-            List<Category> categories = _catalogApiDbContext.Categories.Include(category => category.Products).ToList();
+            List<Category> categories = _catalogApiDbContext.Categories.AsNoTracking().Include(category => category.Products).ToList();
 
             if (categories == null)
             {
@@ -66,7 +66,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategoryProducts(int id)
         {
-            Category? category = _catalogApiDbContext.Categories.Include(category => category.Products).FirstOrDefault(category => category.Id == id);
+            Category? category = _catalogApiDbContext.Categories.AsNoTracking().Include(category => category.Products).FirstOrDefault(category => category.Id == id);
 
             if (category == null)
             {
