@@ -31,7 +31,7 @@ namespace CatalogApi.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name="GetCategory")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategory(int id)
@@ -46,7 +46,7 @@ namespace CatalogApi.Controllers
             return Ok(category);
         }
 
-        [HttpGet("products")]
+        [HttpGet("Products")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategoriesProducts()
@@ -61,7 +61,7 @@ namespace CatalogApi.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("{id:int}/products")]
+        [HttpGet("{id:int}/Products")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategoryProducts(int id)
@@ -83,7 +83,7 @@ namespace CatalogApi.Controllers
         {
             _catalogApiDbContext.Categories.Add(category);
             _catalogApiDbContext.SaveChanges();
-            return Ok(category);
+            return CreatedAtRoute("GetCategory", new { Id = category.Id }, category);
         }
 
         [HttpPut]
