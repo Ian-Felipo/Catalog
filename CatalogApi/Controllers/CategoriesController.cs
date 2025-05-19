@@ -31,7 +31,7 @@ namespace CatalogApi.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("{id:int}", Name="GetCategory")]
+        [HttpGet("{id:int:min(1)}", Name="GetCategory")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategory(int id)
@@ -61,7 +61,7 @@ namespace CatalogApi.Controllers
             return Ok(categories);
         }
 
-        [HttpGet("{id:int}/Products")]
+        [HttpGet("{id:int:min(1)}/Products")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategoryProducts(int id)
@@ -86,7 +86,7 @@ namespace CatalogApi.Controllers
             return CreatedAtRoute("GetCategory", new { Id = category.Id }, category);
         }
 
-        [HttpPut]
+        [HttpPut("{id:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> Put(int id, Category category)
@@ -109,7 +109,7 @@ namespace CatalogApi.Controllers
             return Ok(category);   
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> Delete(int id)
