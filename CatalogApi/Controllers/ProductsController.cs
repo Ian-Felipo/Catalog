@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using CatalogApi.Data;
 using CatalogApi.Models;
 using Microsoft.EntityFrameworkCore;
+using CatalogApi.Filters;
 
 namespace CatalogApi.Controllers
 {
@@ -19,6 +20,7 @@ namespace CatalogApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ServiceFilter(typeof(LoggingFilter))]
         public ActionResult<IEnumerable<Product>> Get()
         {
             List<Product> products = _catalogApiDbContext.Products.AsNoTracking().ToList();

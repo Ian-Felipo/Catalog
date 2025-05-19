@@ -13,11 +13,17 @@ public class LoggingFilter : IActionFilter
 
     public void OnActionExecuted(ActionExecutedContext context)
     {
-        
+        _logger.LogInformation("OnActionExecuting");
+        _logger.LogInformation("############################");
+        _logger.LogInformation($"{context.ModelState.IsValid}");
+        _logger.LogInformation("############################");
     }
 
     public void OnActionExecuting(ActionExecutingContext context)
     {
-        throw new NotImplementedException();
+        _logger.LogInformation("OnActionExecuted");
+        _logger.LogInformation("##########################");
+        _logger.LogInformation($"{context.HttpContext.Response.StatusCode}");
+        _logger.LogInformation("##########################");
     }
 }
