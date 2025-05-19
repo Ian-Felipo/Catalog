@@ -6,7 +6,7 @@ using CatalogApi.Validations;
 namespace CatalogApi.Models;
 
 [Table("Products")]
-public class Product
+public class Product : IValidatableObject
 {
     [Key]
     public int Id { get; set; }
@@ -28,4 +28,22 @@ public class Product
     public int CategoryId { get; set; }
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public Category? Category { get; set; }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (this.Name != null && !string.IsNullOrEmpty(this.Name.ToString()))
+        {
+            var firstCapital = this.Name.ToString()[0].ToString();
+
+            if (firstCapital != firstCapital.ToUpper())
+            {
+                yield return new ValidationResult("A primeira letra deve ser maiuscula!", new[] { nameof(this.Name) });
+            }
+        }
+
+        if (this.Stock < 0)
+        {
+            yield return new ValidationResult("O Estoque nao pode ser negativo!", new[] { nameof(this.Stock) });
+        }
+    }
 }
