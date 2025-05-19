@@ -9,6 +9,7 @@
       "CatalogApi/1.0.0": {
         "dependencies": {
           "Microsoft.AspNetCore.OpenApi": "8.0.8",
+          "Microsoft.EntityFrameworkCore": "8.0.15",
           "Microsoft.EntityFrameworkCore.Design": "8.0.15",
           "Microsoft.EntityFrameworkCore.Tools": "8.0.15",
           "Pomelo.EntityFrameworkCore.MySql": "8.0.3",

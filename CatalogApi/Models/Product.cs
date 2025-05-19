@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using CatalogApi.Validations;
 
 namespace CatalogApi.Models;
 
@@ -11,6 +12,7 @@ public class Product
     public int Id { get; set; }
     [Required]
     [StringLength(100)]
+    [FirstCapitalLetter]
     public string? Name { get; set; }
     [Required]
     [StringLength(300)]
