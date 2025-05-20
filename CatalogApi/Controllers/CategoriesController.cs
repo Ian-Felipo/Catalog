@@ -10,10 +10,12 @@ namespace CatalogApi.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly CatalogApiDbContext _catalogApiDbContext;
+        private readonly ILogger _logger;
 
-        public CategoriesController(CatalogApiDbContext catalogApiDbContext)
+        public CategoriesController(CatalogApiDbContext catalogApiDbContext, ILogger logger)
         {
             _catalogApiDbContext = catalogApiDbContext;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -21,6 +23,8 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategories()
         {
+            _logger.LogInformation("==================== GET /Categories ====================");
+
             List<Category> categories = _catalogApiDbContext.Categories.AsNoTracking().ToList();
 
             if (categories == null)
@@ -36,6 +40,8 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategory(int id)
         {
+            _logger.LogInformation($"==================== GET /Categories/{id} ====================");
+
             Category? category = _catalogApiDbContext.Categories.AsNoTracking().FirstOrDefault(category => category.Id == id);
 
             if (category == null)
@@ -51,6 +57,8 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategoriesProducts()
         {
+            _logger.LogInformation("==================== GET /Categories/Products ====================");
+
             List<Category> categories = _catalogApiDbContext.Categories.AsNoTracking().Include(category => category.Products).ToList();
 
             if (categories == null)
@@ -66,6 +74,8 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategoryProducts(int id)
         {
+            _logger.LogInformation($"==================== GET /Categories/Products/{id} ====================");
+
             Category? category = _catalogApiDbContext.Categories.AsNoTracking().Include(category => category.Products).FirstOrDefault(category => category.Id == id);
 
             if (category == null)

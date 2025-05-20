@@ -3,6 +3,8 @@ using CatalogApi.Data;
 using CatalogApi.Models;
 using Microsoft.EntityFrameworkCore;
 using CatalogApi.Filters;
+using System.Data;
+using System.Reflection.Metadata;
 
 namespace CatalogApi.Controllers
 {

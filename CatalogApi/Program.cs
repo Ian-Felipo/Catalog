@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using CatalogApi.Data;
+using CatalogApi.Extensions;
 using CatalogApi.Filters;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ConfigureExceptionHandler();
 }
 
 app.UseHttpsRedirection();
