@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using APICatalogo.Logging;
 using CatalogApi.Data;
 using CatalogApi.Extensions;
 using CatalogApi.Filters;
