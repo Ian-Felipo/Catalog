@@ -10,6 +10,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // ********************
 
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(ExceptionFilter));
+});
+
 builder.Services.AddDbContext<CatalogApiDbContext>(options =>
     {
         string? connectionString = builder.Configuration["ConnectionStrings:MySql"];

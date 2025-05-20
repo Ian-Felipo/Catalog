@@ -5,8 +5,8 @@ namespace CatalogApi.Filters;
 
 public class ExceptionFilter : IExceptionFilter
 {
-    private readonly ILogger<ApiExceptionFilter> _logger;
-    public ApiExceptionFilter(ILogger<ApiExceptionFilter> logger)
+    private readonly ILogger<ExceptionFilter> _logger;
+    public ExceptionFilter(ILogger<ExceptionFilter> logger)
     {
         _logger = logger;
     }
