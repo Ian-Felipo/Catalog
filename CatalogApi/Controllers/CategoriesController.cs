@@ -1,5 +1,7 @@
 using CatalogApi.Data;
+using CatalogApi.Interfaces;
 using CatalogApi.Models;
+using CatalogApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,13 +11,11 @@ namespace CatalogApi.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly CatalogApiDbContext _catalogApiDbContext;
-        private readonly ILogger _logger;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoriesController(CatalogApiDbContext catalogApiDbContext, ILogger logger)
+        public CategoriesController(ICategoryRepository categoryRepository)
         {
-            _catalogApiDbContext = catalogApiDbContext;
-            _logger = logger;
+            _categoryRepository = categoryRepository;
         }
 
         [HttpGet]
@@ -23,9 +23,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategories()
         {
-            _logger.LogInformation("==================== GET /Categories ====================");
-
-            List<Category> categories = _catalogApiDbContext.Categories.AsNoTracking().ToList();
+            IEnumerable<Category> categories = _categoryRepository.GetCategories();
 
             if (categories == null)
             {
@@ -40,9 +38,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategory(int id)
         {
-            _logger.LogInformation($"==================== GET /Categories/{id} ====================");
-
-            Category? category = _catalogApiDbContext.Categories.AsNoTracking().FirstOrDefault(category => category.Id == id);
+            Category? category = _categoryRepository.GetCategory(id);
 
             if (category == null)
             {
@@ -57,9 +53,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategoriesProducts()
         {
-            _logger.LogInformation("==================== GET /Categories/Products ====================");
-
-            List<Category> categories = _catalogApiDbContext.Categories.AsNoTracking().Include(category => category.Products).ToList();
+            IEnumerable<Category> categories = _categoryRepository.GetCategoriesProducts();
 
             if (categories == null)
             {
@@ -74,9 +68,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategoryProducts(int id)
         {
-            _logger.LogInformation($"==================== GET /Categories/Products/{id} ====================");
-
-            Category? category = _catalogApiDbContext.Categories.AsNoTracking().Include(category => category.Products).FirstOrDefault(category => category.Id == id);
+            Category? category = _categoryRepository.GetCategoryProducts(id);
 
             if (category == null)
             {
@@ -91,8 +83,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> Post(Category category)
         {
-            _catalogApiDbContext.Categories.Add(category);
-            _catalogApiDbContext.SaveChanges();
+            _categoryRepository.PostCategory(category);
             return CreatedAtRoute("GetCategory", new { Id = category.Id }, category);
         }
 
@@ -105,16 +96,8 @@ namespace CatalogApi.Controllers
             {
                 return BadRequest();
             }
-            
-            try 
-            {
-                _catalogApiDbContext.Entry(category).State = EntityState.Modified;
-                _catalogApiDbContext.SaveChanges();
-            }
-            catch 
-            {
-                return BadRequest($"Nao existe uma Categoria com o Id {id} no banco de dados");
-            }
+
+            _categoryRepository.PutCategory(category);
 
             return Ok(category);   
         }
@@ -124,15 +107,14 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> Delete(int id)
         {
-            Category? category = _catalogApiDbContext.Categories.FirstOrDefault(category => category.Id == id);
+            Category? category = _categoryRepository.GetCategory(id);
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            _catalogApiDbContext.Categories.Remove(category);
-            _catalogApiDbContext.SaveChanges();
+            _categoryRepository.DeleteCategory(category);
 
             return Ok(category);
         }

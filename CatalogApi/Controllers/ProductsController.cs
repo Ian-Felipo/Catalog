@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using CatalogApi.Filters;
 using System.Data;
 using System.Reflection.Metadata;
+using CatalogApi.Interfaces;
 
 namespace CatalogApi.Controllers
 {
@@ -12,11 +13,11 @@ namespace CatalogApi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly CatalogApiDbContext _catalogApiDbContext;
+        private readonly IProductRepository _productRepository;
 
-        public ProductsController(CatalogApiDbContext catalogApiDbContext) 
+        public ProductsController(IProductRepository productRepository) 
         {
-            _catalogApiDbContext = catalogApiDbContext;
+            _productRepository = productRepository;
         }
 
         [HttpGet]
@@ -25,7 +26,7 @@ namespace CatalogApi.Controllers
         [ServiceFilter(typeof(LoggingFilter))]
         public ActionResult<IEnumerable<Product>> Get()
         {
-            List<Product> products = _catalogApiDbContext.Products.AsNoTracking().ToList();
+            IEnumerable<Product> products = _productRepository.GetProducts();
 
             if (products == null)
             {
@@ -40,7 +41,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Product> Get(int id)
         {
-            Product? product = _catalogApiDbContext.Products.AsNoTracking().FirstOrDefault(product => product.Id == id);
+            Product? product = _productRepository.GetProduct(id);
 
             if (product == null)
             {
@@ -55,8 +56,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Product> Post(Product product)
         {
-            _catalogApiDbContext.Products.Add(product);
-            _catalogApiDbContext.SaveChanges();
+            _productRepository.PostProduct(product);
             return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
         }
 
@@ -70,16 +70,8 @@ namespace CatalogApi.Controllers
                 return BadRequest();
             }
 
-            try
-            {
-                _catalogApiDbContext.Entry(product).State = EntityState.Modified; // *******************************************
-                _catalogApiDbContext.SaveChanges();
-            }
-            catch 
-            {
-                return BadRequest($"Nao existe uma Categoria com o Id {id} no banco de dados");
-            }
-
+            _productRepository.PutProduct(product);
+          
             return Ok(product);
         }
 
@@ -88,15 +80,14 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Product> Delete(int id)
         {
-            Product? product = _catalogApiDbContext.Products.FirstOrDefault(product => product.Id == id);
+            Product? product = _productRepository.GetProduct(id);
 
             if (product == null)
             {
                 return NotFound();
             }
 
-            _catalogApiDbContext.Products.Remove(product);
-            _catalogApiDbContext.SaveChanges();
+            _productRepository.Delete(product);
 
             return Ok(product);
         }

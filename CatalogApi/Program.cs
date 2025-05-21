@@ -2,6 +2,8 @@ using System.Text.Json.Serialization;
 using CatalogApi.Data;
 using CatalogApi.Extensions;
 using CatalogApi.Filters;
+using CatalogApi.Interfaces;
+using CatalogApi.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles); // ********************
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddControllers(options =>
 {
