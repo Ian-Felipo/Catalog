@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using CatalogApi.Data;
 using CatalogApi.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogApi.Repositories;
 
@@ -14,32 +16,29 @@ public class Repository<T> : IRepository<T> where T : class
 
     public IEnumerable<T> GetAll()
     {
-        return _catalogApiDbContext.Set<T>().ToList();
+        return _catalogApiDbContext.Set<T>().AsNoTracking().ToList();
     }
 
-    public T? Get(Expression<Func<T, bool>> predicado)
+    public T? Get(Expression<Func<T,bool>> predicado)
     {
-        return _catalogApiDbContext.Set<T>().FirstOrDefault(predicado);
+        return _catalogApiDbContext.Set<T>().AsNoTracking().FirstOrDefault(predicado);
     }
 
     public T Post(T entity)
     {
         _catalogApiDbContext.Set<T>().Add(entity);
-        _catalogApiDbContext.SaveChanges();
         return entity;
     }
 
     public T Put(T entity)
     {
         _catalogApiDbContext.Set<T>().Update(entity);
-        _catalogApiDbContext.SaveChanges();
         return entity;
     }
 
     public T Delete(T entity)
     {
-        _catalogApiDbContext.Set<T>().Delete(entity);
-        _catalogApiDbContext.SaveChanges();
+        _catalogApiDbContext.Set<T>().Remove(entity);
         return entity;
     }
 }

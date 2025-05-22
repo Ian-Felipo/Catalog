@@ -4,5 +4,4 @@ namespace CatalogApi.Interfaces;
 
 public interface IProductRepository : IRepository<Product>
 {
-    
 }

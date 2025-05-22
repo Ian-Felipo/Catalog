@@ -11,11 +11,11 @@ namespace CatalogApi.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CategoriesController(ICategoryRepository categoryRepository)
+        public CategoriesController(IUnitOfWork unitOfWork)
         {
-            _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -23,7 +23,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategories()
         {
-            IEnumerable<Category> categories = _categoryRepository.GetCategories();
+            IEnumerable<Category> categories = _unitOfWork.CategoryRepository.GetAll();
 
             if (categories == null)
             {
@@ -38,7 +38,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategory(int id)
         {
-            Category? category = _categoryRepository.GetCategory(id);
+            Category? category = _unitOfWork.CategoryRepository.Get(category => category.Id == id);
 
             if (category == null)
             {
@@ -53,7 +53,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<Category>> GetCategoriesProducts()
         {
-            IEnumerable<Category> categories = _categoryRepository.GetCategoriesProducts();
+            IEnumerable<Category> categories = _unitOfWork.CategoryRepository.GetCategoriesProducts();
 
             if (categories == null)
             {
@@ -68,7 +68,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> GetCategoryProducts(int id)
         {
-            Category? category = _categoryRepository.GetCategoryProducts(id);
+            Category? category = _unitOfWork.CategoryRepository.GetCategoryProducts(id);
 
             if (category == null)
             {
@@ -83,7 +83,8 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> Post(Category category)
         {
-            _categoryRepository.PostCategory(category);
+            _unitOfWork.CategoryRepository.Post(category);
+            _unitOfWork.Commit();
             return CreatedAtRoute("GetCategory", new { Id = category.Id }, category);
         }
 
@@ -97,7 +98,8 @@ namespace CatalogApi.Controllers
                 return BadRequest();
             }
 
-            _categoryRepository.PutCategory(category);
+            _unitOfWork.CategoryRepository.Put(category);
+            _unitOfWork.Commit();
 
             return Ok(category);   
         }
@@ -107,14 +109,15 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Category> Delete(int id)
         {
-            Category? category = _categoryRepository.GetCategory(id);
+            Category? category = _unitOfWork.CategoryRepository.Get(category => category.Id == id);
 
             if (category == null)
             {
                 return NotFound();
             }
 
-            _categoryRepository.DeleteCategory(category);
+            _unitOfWork.CategoryRepository.Delete(category);
+            _unitOfWork.Commit();
 
             return Ok(category);
         }

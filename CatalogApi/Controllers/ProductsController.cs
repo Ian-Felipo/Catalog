@@ -13,11 +13,11 @@ namespace CatalogApi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ProductsController(IProductRepository productRepository) 
+        public ProductsController(IUnitOfWork unitOfWork) 
         {
-            _productRepository = productRepository;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet]
@@ -26,7 +26,7 @@ namespace CatalogApi.Controllers
         [ServiceFilter(typeof(LoggingFilter))]
         public ActionResult<IEnumerable<Product>> Get()
         {
-            IEnumerable<Product> products = _productRepository.GetProducts();
+            IEnumerable<Product> products = _unitOfWork.ProductRepository.GetAll();
 
             if (products == null)
             {
@@ -41,7 +41,7 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Product> Get(int id)
         {
-            Product? product = _productRepository.GetProduct(id);
+            Product? product = _unitOfWork.ProductRepository.Get(product => product.Id == id);
 
             if (product == null)
             {
@@ -56,7 +56,8 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public ActionResult<Product> Post(Product product)
         {
-            _productRepository.PostProduct(product);
+            _unitOfWork.ProductRepository.Post(product);
+            _unitOfWork.Commit();
             return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
         }
 
@@ -70,7 +71,8 @@ namespace CatalogApi.Controllers
                 return BadRequest();
             }
 
-            _productRepository.PutProduct(product);
+            _unitOfWork.ProductRepository.Put(product);
+            _unitOfWork.Commit();
           
             return Ok(product);
         }
@@ -80,14 +82,15 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<Product> Delete(int id)
         {
-            Product? product = _productRepository.GetProduct(id);
+            Product? product = _unitOfWork.ProductRepository.Get(product => product.Id == id);
 
             if (product == null)
             {
                 return NotFound();
             }
 
-            _productRepository.Delete(product);
+            _unitOfWork.ProductRepository.Delete(product);
+            _unitOfWork.Commit();
 
             return Ok(product);
         }

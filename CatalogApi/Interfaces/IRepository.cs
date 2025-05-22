@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+
 namespace CatalogApi.Interfaces;
 
 public interface IRepository<T>

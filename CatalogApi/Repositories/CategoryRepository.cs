@@ -1,12 +1,15 @@
 using CatalogApi.Data;
 using CatalogApi.Interfaces;
 using CatalogApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogApi.Repositories;
 
-public class CategoryRepository : Repository<T>, ICategoryRepository
+public class CategoryRepository : Repository<Category>, ICategoryRepository
 {
-    private readonly CatalogApiDbContext _catalogApiDbContext;
+    public CategoryRepository(CatalogApiDbContext catalogApiDbContext) : base(catalogApiDbContext)
+    {
+    }
 
     public IEnumerable<Category> GetCategoriesProducts()
     {
