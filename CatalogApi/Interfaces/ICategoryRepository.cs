@@ -4,13 +4,8 @@ using CatalogApi.Models;
 
 namespace CatalogApi.Interfaces;
 
-public interface ICategoryRepository
+public interface ICategoryRepository : IRepository<Category>
 {
-    IEnumerable<Category> GetCategories();
-    Category? GetCategory(int id);
     IEnumerable<Category> GetCategoriesProducts();
     Category? GetCategoryProducts(int id);
-    Category PostCategory(Category category);
-    Category PutCategory(Category category);
-    Category DeleteCategory(Category category);
 }

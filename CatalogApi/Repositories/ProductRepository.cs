@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatalogApi.ProductRepository;
 
-public class ProductRepository : IProductRepository
+public class ProductRepository : Repository<Product>, IProductRepository
 {
     private readonly CatalogApiDbContext _catalogApiDbContext;
 
