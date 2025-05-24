@@ -6,6 +6,8 @@ using CatalogApi.Filters;
 using System.Data;
 using System.Reflection.Metadata;
 using CatalogApi.Interfaces;
+using AutoMapper;
+using CatalogApi.DTOs;
 
 namespace CatalogApi.Controllers
 {
@@ -14,32 +16,36 @@ namespace CatalogApi.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ProductsController(IUnitOfWork unitOfWork) 
+        public ProductsController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ServiceFilter(typeof(LoggingFilter))]
-        public ActionResult<IEnumerable<Product>> Get()
+        public ActionResult<IEnumerable<ProductResponse>> Get()
         {
             IEnumerable<Product> products = _unitOfWork.ProductRepository.GetAll();
 
             if (products == null)
             {
                 return NotFound();
-            }            
+            }
 
-            return Ok(products);
+            IEnumerable<ProductResponse> productResponses = _mapper.Map<IEnumerable<ProductResponse>>(products);
+
+            return Ok(productResponses);
         }
 
         [HttpGet("{id:int:min(1)}", Name="GetProduct")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Product> Get(int id)
+        public ActionResult<ProductResponse> Get(int id)
         {
             Product? product = _unitOfWork.ProductRepository.Get(product => product.Id == id);
 
@@ -48,39 +54,39 @@ namespace CatalogApi.Controllers
                 return NotFound();
             }
 
-            return Ok(product);
+            ProductResponse productResponse = _mapper.Map<ProductResponse>(product);
+
+            return Ok(productResponse);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public ActionResult<Product> Post(Product product)
+        public ActionResult<ProductResponse> Post(ProductRequest productRequest)
         {
+            Product product = _mapper.Map<Product>(productRequest);
             _unitOfWork.ProductRepository.Post(product);
             _unitOfWork.Commit();
-            return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
+            ProductResponse productResponse = _mapper.Map<ProductResponse>(product);
+            return CreatedAtRoute("GetProduct", new { Id = productResponse.Id }, productResponse);
         }
 
         [HttpPut("{id:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Product> Put(int id, Product product)
+        public ActionResult<ProductResponse> Put(int id, ProductRequest productRequest)
         {
-            if (id != product.Id)
-            {
-                return BadRequest();
-            }
-
+            Product product = _mapper.Map<Product>(productRequest); 
             _unitOfWork.ProductRepository.Put(product);
             _unitOfWork.Commit();
-          
-            return Ok(product);
+            ProductResponse productResponse = _mapper.Map<ProductResponse>(product);
+            return Ok(productResponse);
         }
 
         [HttpDelete("{id:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<Product> Delete(int id)
+        public ActionResult<ProductResponse> Delete(int id)
         {
             Product? product = _unitOfWork.ProductRepository.Get(product => product.Id == id);
 
@@ -92,7 +98,9 @@ namespace CatalogApi.Controllers
             _unitOfWork.ProductRepository.Delete(product);
             _unitOfWork.Commit();
 
-            return Ok(product);
+            ProductResponse productResponse = _mapper.Map<ProductResponse>(product);
+
+            return Ok(productResponse);
         }
     }
 }

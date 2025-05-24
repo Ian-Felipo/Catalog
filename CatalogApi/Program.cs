@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using CatalogApi.AutoMappers;
 using CatalogApi.Data;
 using CatalogApi.Extensions;
 using CatalogApi.Filters;
@@ -14,7 +15,8 @@ builder.Services.AddControllers().AddJsonOptions(options => options.JsonSerializ
 builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddAutoMapper(typeof(CategoryMapperProfile), typeof(ProductMapperProfile)); 
 
 builder.Services.AddControllers(options =>
 {
