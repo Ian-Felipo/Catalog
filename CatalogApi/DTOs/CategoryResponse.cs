@@ -1,19 +1,15 @@
-using System.Collections.ObjectModel;
-using System.Text.Json.Serialization;
-using CatalogApi.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace CatalogApi.DTOs;
 
 public class CategoryResponse
 {
-    public CategoryResponse()
-    {
-        Products = new Collection<ProductResponse>();
-    }
-
     public int Id { get; set; }
+    [Required()]
+    [StringLength(100)]
     public string? Name { get; set; }
+    [Required]
+    [StringLength(300)]
     public string? ImageUrl { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public ICollection<ProductResponse> Products { get; set; } 
+    public IEnumerable<ProductResponse> Products { get; set; }
 }

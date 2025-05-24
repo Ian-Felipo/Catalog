@@ -21,6 +21,5 @@ public class Category
     [Required]
     [StringLength(300)]
     public string? ImageUrl { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public ICollection<Product> Products { get; set; }
 }

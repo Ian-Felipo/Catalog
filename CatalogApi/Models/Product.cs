@@ -26,7 +26,6 @@ public class Product : IValidatableObject
     public float Stock { get; set; }
     public DateTime RegistrationDate { get; set; }
     public int CategoryId { get; set; }
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public Category? Category { get; set; }
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

@@ -1,38 +1,37 @@
 using CatalogApi.DTOs;
 using CatalogApi.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace CatalogApi.Mappers;
 
 public static class ProductMapper
 {
-    public static Category? CategoryRequestToCategory(this CategoryRequest categoryRequest)
+    public static Product ProductRequestToProduct(this ProductRequest productRequest, int id = 0)
     {
-        if (categoryRequest == null)
+        return new Product
         {
-            return null;
-        }
-
-        return new Category
-        {
-            Name = categoryRequest.Name,
-            ImageUrl = categoryRequest.ImageUrl
+            Id = id,
+            Name = productRequest.Name,
+            Description = productRequest.Description,
+            Price = productRequest.Price,
+            ImageUrl = productRequest.ImageUrl,
+            Stock = productRequest.Stock,
+            RegistrationDate = productRequest.RegistrationDate,
+            CategoryId = productRequest.CategoryId
         };
     }
 
-    public static CategoryResponse? CategoryToCategoryResponse(this Category category)
+    public static ProductResponse ProductToProductResponse(this Product product)
     {
-        if (category == null)
+        return new ProductResponse
         {
-            return null;
-        }
-
-        return new CategoryResponse
-        {
-            Id = category.Id,
-            Name = category.Name,
-            ImageUrl = category.ImageUrl,
-            Products = category.Products,
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            Price = product.Price,
+            ImageUrl = product.ImageUrl,
+            Stock = product.Stock,
+            RegistrationDate = product.RegistrationDate,
+            CategoryId = product.CategoryId
         };
     }
 }

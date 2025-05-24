@@ -1,14 +1,13 @@
 using System.ComponentModel.DataAnnotations;
-using CatalogApi.Validations;
 
 namespace CatalogApi.DTOs;
 
 public class ProductResponse
 {
+    [Required] 
     public int Id { get; set; }
     [Required]
     [StringLength(100)]
-    [FirstCapitalLetter]
     public string? Name { get; set; }
     [Required]
     [StringLength(300)]
@@ -19,6 +18,6 @@ public class ProductResponse
     [StringLength(300)]
     public string? ImageUrl { get; set; }
     public float Stock { get; set; }
-    [Required]
+    public DateTime RegistrationDate { get; set; } = DateTime.Now;
     public int CategoryId { get; set; }
 }
