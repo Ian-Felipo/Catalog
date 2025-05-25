@@ -1,6 +1,5 @@
 using CatalogApi.Models;
 using CatalogApi.Pagination;
-using CatalogApi.Parameters;
 
 namespace CatalogApi.Interfaces;
 

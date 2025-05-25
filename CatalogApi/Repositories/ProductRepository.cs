@@ -2,7 +2,6 @@ using CatalogApi.Data;
 using CatalogApi.Interfaces;
 using CatalogApi.Models;
 using CatalogApi.Pagination;
-using CatalogApi.Parameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogApi.Repositories;

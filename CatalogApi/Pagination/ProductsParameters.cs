@@ -1,4 +1,4 @@
-namespace CatalogApi.Parameters;
+namespace CatalogApi.Pagination;
 
 public class ProductsParameters
 {

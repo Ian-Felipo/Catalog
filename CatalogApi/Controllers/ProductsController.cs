@@ -9,9 +9,9 @@ using CatalogApi.Interfaces;
 using AutoMapper;
 using CatalogApi.DTOs;
 using Microsoft.AspNetCore.JsonPatch;
-using CatalogApi.Parameters;
 using System.Text.Json;
 using Newtonsoft.Json;
+using CatalogApi.Pagination;
 
 namespace CatalogApi.Controllers
 {
@@ -55,7 +55,7 @@ namespace CatalogApi.Controllers
 
             IEnumerable<ProductResponse> productResponses = _mapper.Map<IEnumerable<ProductResponse>>(products);
 
-            return Ok(productResponses);<
+            return Ok(productResponses);
         }
 
         [HttpGet("{id:int:min(1)}", Name = "GetProduct")]
