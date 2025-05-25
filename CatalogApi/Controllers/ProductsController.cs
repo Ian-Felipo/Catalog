@@ -8,6 +8,7 @@ using System.Reflection.Metadata;
 using CatalogApi.Interfaces;
 using AutoMapper;
 using CatalogApi.DTOs;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace CatalogApi.Controllers
 {
@@ -42,7 +43,7 @@ namespace CatalogApi.Controllers
             return Ok(productResponses);
         }
 
-        [HttpGet("{id:int:min(1)}", Name="GetProduct")]
+        [HttpGet("{id:int:min(1)}", Name = "GetProduct")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<ProductResponse> Get(int id)
@@ -76,7 +77,8 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<ProductResponse> Put(int id, ProductRequest productRequest)
         {
-            Product product = _mapper.Map<Product>(productRequest); 
+            Product product = _mapper.Map<Product>(productRequest);
+            product.Id = id;
             _unitOfWork.ProductRepository.Put(product);
             _unitOfWork.Commit();
             ProductResponse productResponse = _mapper.Map<ProductResponse>(product);
@@ -96,6 +98,34 @@ namespace CatalogApi.Controllers
             }
 
             _unitOfWork.ProductRepository.Delete(product);
+            _unitOfWork.Commit();
+
+            ProductResponse productResponse = _mapper.Map<ProductResponse>(product);
+
+            return Ok(productResponse);
+        }
+
+        [HttpPatch]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<ProductResponse> Patch(int id, JsonPatchDocument<ProductRequest> patchDoc)
+        {
+            Product? product = _unitOfWork.ProductRepository.Get(product => product.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            ProductRequest productRequest = _mapper.Map<ProductRequest>(product);
+
+            patchDoc.ApplyTo(productRequest, ModelState);
+
+            product = _mapper.Map<Product>(productRequest);
+            product.Id = id;
+
+            _unitOfWork.ProductRepository.Put(product);
             _unitOfWork.Commit();
 
             ProductResponse productResponse = _mapper.Map<ProductResponse>(product);

@@ -19,9 +19,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(CategoryMapperProfile), typeof(ProductMapperProfile)); 
 
 builder.Services.AddControllers(options =>
-{
-    options.Filters.Add(typeof(ExceptionFilter));
-});
+    {
+        options.Filters.Add(typeof(ExceptionFilter));
+    }
+).AddNewtonsoftJson();
 
 builder.Services.AddDbContext<CatalogApiDbContext>(options =>
     {
