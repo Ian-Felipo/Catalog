@@ -1,9 +1,10 @@
 using CatalogApi.Models;
+using CatalogApi.Pagination;
 using CatalogApi.Parameters;
 
 namespace CatalogApi.Interfaces;
 
 public interface IProductRepository : IRepository<Product>
 {
-    IEnumerable<Product> GetProducts(ProductsParameters productsParameters);
+    PagedList<Product> GetProducts(ProductsParameters productsParameters);
 }

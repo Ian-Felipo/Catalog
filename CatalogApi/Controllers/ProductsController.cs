@@ -9,6 +9,9 @@ using CatalogApi.Interfaces;
 using AutoMapper;
 using CatalogApi.DTOs;
 using Microsoft.AspNetCore.JsonPatch;
+using CatalogApi.Parameters;
+using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace CatalogApi.Controllers
 {
@@ -29,18 +32,30 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ServiceFilter(typeof(LoggingFilter))]
-        public ActionResult<IEnumerable<ProductResponse>> Get()
+        public ActionResult<IEnumerable<ProductResponse>> Get([FromQuery ]ProductsParameters productsParameters)
         {
-            IEnumerable<Product> products = _unitOfWork.ProductRepository.GetAll();
+            var products = _unitOfWork.ProductRepository.GetProducts(productsParameters);
 
             if (products == null)
             {
                 return NotFound();
             }
 
+            var metadata = new
+            {
+                products.TotalCount,
+                products.PageSize,
+                products.CurrentPage,
+                products.TotalPages,
+                products.HasPrevious,
+                products.HasNext
+            };
+
+            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
+
             IEnumerable<ProductResponse> productResponses = _mapper.Map<IEnumerable<ProductResponse>>(products);
 
-            return Ok(productResponses);
+            return Ok(productResponses);<
         }
 
         [HttpGet("{id:int:min(1)}", Name = "GetProduct")]

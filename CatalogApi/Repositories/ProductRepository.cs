@@ -1,6 +1,7 @@
 using CatalogApi.Data;
 using CatalogApi.Interfaces;
 using CatalogApi.Models;
+using CatalogApi.Pagination;
 using CatalogApi.Parameters;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,8 +13,9 @@ public class ProductRepository : Repository<Product>, IProductRepository
     {
     }
 
-    public IEnumerable<Product> GetProducts(ProductsParameters productsParameters)
+    public PagedList<Product> GetProducts(ProductsParameters productsParameters)
     {
-        return GetAll().Skip((productsParameters.PageNumber - 1) * productsParameters.PageSize).Take(productsParameters.PageSize).ToList();
+        IQueryable<Product> products = GetAll().AsQueryable();
+        return PagedList<Product>.ToPagedList(products, productsParameters.PageNumber, productsParameters.PageSize);
     }
 }
