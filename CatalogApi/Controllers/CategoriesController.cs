@@ -24,22 +24,8 @@ namespace CatalogApi.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<CategoryResponse>> Get([FromQuery] CategoriesParameters categoriesParameters)
+        private ActionResult<IEnumerable<CategoryResponse>> Get(PagedList<Category> categories)
         {
-            PagedList<Category> categories;
-
-            if (categoriesParameters.products)
-            {
-                categories = _unitOfWork.CategoryRepository.GetCategoriesProductsPagedList(categoriesParameters);
-            }
-            else
-            {
-                categories = _unitOfWork.CategoryRepository.GetCategoriesPagedList(categoriesParameters);
-            }
-
             if (categories == null)
             {
                 return NotFound();
@@ -62,12 +48,30 @@ namespace CatalogApi.Controllers
             return Ok(categoriesResponses);
         }
 
-        [HttpGet("{id:int:min(1)}", Name="GetCategory")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<CategoryResponse>> Get([FromQuery] CategoriesParameters categoriesParameters)
+        {
+            PagedList<Category> categories = _unitOfWork.CategoryRepository.GetPagedList(categoriesParameters);
+            return Get(categories);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<CategoryResponse>> Get([FromQuery] CategoriesFilterName categoriesFilterName)
+        {
+            PagedList<Category> categories = _unitOfWork.CategoryRepository.GetPagedListFilterName(categoriesFilterName);
+            return Get(categories);
+        }
+
+        [HttpGet("{id:int:min(1)}", Name = "GetCategory")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<CategoryResponse> GetCategory(int id, bool products = false)
         {
-            Category? category = products ? _unitOfWork.CategoryRepository.GetCategoryProducts(id) : _unitOfWork.CategoryRepository.Get(category => category.Id == id);
+            Category? category = products ? _unitOfWork.CategoryRepository.GetWithProducts(id) : _unitOfWork.CategoryRepository.Get(category => category.Id == id);
 
             if (category == null)
             {

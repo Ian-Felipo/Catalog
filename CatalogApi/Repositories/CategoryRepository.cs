@@ -12,27 +12,33 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
     {
     }
 
-    public IEnumerable<Category> GetCategoriesProducts()
+    public IEnumerable<Category> GetAllWithProducts()
     {
         List<Category> categories = _catalogApiDbContext.Categories.Include(category => category.Products).AsNoTracking().ToList();
         return categories;
     }
 
-    public Category? GetCategoryProducts(int id)
+    public Category? GetWithProducts(int id)
     {
         Category? category = _catalogApiDbContext.Categories.Include(category => category.Products).AsNoTracking().FirstOrDefault(category => category.Id == id);
         return category;
     }
-    
-    public PagedList<Category> GetCategoriesPagedList(CategoriesParameters categoriesParameters)
+
+    public PagedList<Category> GetPagedList(CategoriesParameters categoriesParameters)
     {
-        IQueryable<Category> categories = GetAll().AsQueryable();
-        return PagedList<Category>.ToPagedList(categories, categoriesParameters.PageNumber, categoriesParameters.PageSize); ;
+        IQueryable<Category> categories = categoriesParameters.products ? GetAllWithProducts().AsQueryable() : GetAll().AsQueryable();
+        return PagedList<Category>.ToPagedList(categories, categoriesParameters.PageNumber, categoriesParameters.PageSize); 
     }
-    
-    public PagedList<Category> GetCategoriesProductsPagedList(CategoriesParameters categoriesParameters)
+
+    public PagedList<Category> GetPagedListFilterName(CategoriesFilterName categoriesFilterName)
     {
-        IQueryable<Category> categories = GetCategoriesProducts().AsQueryable();
-        return PagedList<Category>.ToPagedList(categories, categoriesParameters.PageNumber, categoriesParameters.PageSize); ;
+        IQueryable<Category> categories = categoriesFilterName.products ? GetAllWithProducts().AsQueryable() : GetAll().AsQueryable();
+
+        if (!string.IsNullOrEmpty(categoriesFilterName.Name))
+        {
+            categories = categories.Where(category => category.Name.Contains(categoriesFilterName.Name));
+        }
+
+        return PagedList<Category>.ToPagedList(categories, categoriesFilterName.PageNumber, categoriesFilterName.PageSize);
     }
 }
