@@ -11,4 +11,5 @@ public interface ICategoryRepository : IRepository<Category>
     Category? GetCategoryProducts(int id);
     PagedList<Category> GetCategoriesPagedList(CategoriesParameters categoriesParameters);
     PagedList<Category> GetCategoriesProductsPagedList(CategoriesParameters productsParameters);
+    PagedList<Category> GetCategoriesPagedListFilterPrice(ProductsFilterPrice productsFilterPrice);
 }
