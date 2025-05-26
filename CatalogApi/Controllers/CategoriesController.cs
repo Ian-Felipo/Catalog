@@ -57,7 +57,7 @@ namespace CatalogApi.Controllers
             return Get(categories);
         }
 
-        [HttpGet]
+        [HttpGet("Filter/Name")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<CategoryResponse>> Get([FromQuery] CategoriesFilterName categoriesFilterName)

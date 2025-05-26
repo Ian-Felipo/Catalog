@@ -56,7 +56,7 @@ namespace CatalogApi.Controllers
             return Get(products);
         }
 
-        [HttpGet]
+        [HttpGet("Filter/Price")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ProductResponse>> Get([FromQuery] ProductsFilterPrice productsFilterPrice)
