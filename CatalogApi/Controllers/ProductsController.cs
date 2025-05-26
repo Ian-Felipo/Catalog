@@ -1,15 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using CatalogApi.Data;
 using CatalogApi.Models;
-using Microsoft.EntityFrameworkCore;
 using CatalogApi.Filters;
-using System.Data;
-using System.Reflection.Metadata;
 using CatalogApi.Interfaces;
 using AutoMapper;
 using CatalogApi.DTOs;
 using Microsoft.AspNetCore.JsonPatch;
-using System.Text.Json;
 using Newtonsoft.Json;
 using CatalogApi.Pagination;
 
@@ -28,14 +23,8 @@ namespace CatalogApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ServiceFilter(typeof(LoggingFilter))]
-        public ActionResult<IEnumerable<ProductResponse>> Get([FromQuery] ProductsParameters productsParameters)
+        private ActionResult<IEnumerable<ProductResponse>> Get(PagedList<Product> products)
         {
-            PagedList<Product> products = _unitOfWork.ProductRepository.GetProductsPagedList(productsParameters);
-
             if (products == null)
             {
                 return NotFound();
@@ -56,6 +45,24 @@ namespace CatalogApi.Controllers
             IEnumerable<ProductResponse> productResponses = _mapper.Map<IEnumerable<ProductResponse>>(products);
 
             return Ok(productResponses);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ProductResponse>> Get([FromQuery] ProductsParameters productsParameters)
+        {
+            PagedList<Product> products = _unitOfWork.ProductRepository.GetProductsPagedList(productsParameters);
+            return Get(products);
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ProductResponse>> Get([FromQuery] ProductsFilterPrice productsFilterPrice)
+        {
+            PagedList<Product> products = _unitOfWork.ProductRepository.GetProductsPagedListFilterPrice(productsFilterPrice);
+            return Get(products);
         }
 
         [HttpGet("{id:int:min(1)}", Name = "GetProduct")]

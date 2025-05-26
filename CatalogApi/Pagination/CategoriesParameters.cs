@@ -1,6 +1,6 @@
 namespace CatalogApi.Pagination;
 
-public class CategoriesParameters : QueryStringParameters
+public class CategoriesParameters : QueryParameters
 {
     public bool products { get; set; } = false;
 }

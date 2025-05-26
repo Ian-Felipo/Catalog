@@ -1,5 +1,5 @@
 namespace CatalogApi.Pagination;
 
-public class ProductsParameters : QueryStringParameters
+public class ProductsParameters : QueryParameters
 {
 }

@@ -6,4 +6,5 @@ namespace CatalogApi.Interfaces;
 public interface IProductRepository : IRepository<Product>
 {
     PagedList<Product> GetProductsPagedList(ProductsParameters productsParameters);
+    PagedList<Product> GetProductsPagedListFilterPrice(ProductsFilterPrice productsFilterPrice);
 }
