@@ -12,7 +12,7 @@ public class ProductRepository : Repository<Product>, IProductRepository
     {
     }
 
-    public PagedList<Product> GetProducts(ProductsParameters productsParameters)
+    public PagedList<Product> GetProductsPagedList(ProductsParameters productsParameters)
     {
         IQueryable<Product> products = GetAll().AsQueryable();
         return PagedList<Product>.ToPagedList(products, productsParameters.PageNumber, productsParameters.PageSize);

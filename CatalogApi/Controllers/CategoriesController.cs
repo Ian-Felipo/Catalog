@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using AutoMapper;
 using CatalogApi.Data;
 using CatalogApi.DTOs;
@@ -26,9 +27,18 @@ namespace CatalogApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<CategoryResponse>> GetCategories([FromQuery] CategoriesParameters categoriesParameters, [FromQuery] bool products = false)
+        public ActionResult<IEnumerable<CategoryResponse>> Get([FromQuery] CategoriesParameters categoriesParameters)
         {
-            var categories = products ? _unitOfWork.CategoryRepository.GetCategoriesProducts(categoriesParameters) : _unitOfWork.CategoryRepository.GetCategories(categoriesParameters);
+            PagedList<Category> categories;
+
+            if (categoriesParameters.products)
+            {
+                categories = _unitOfWork.CategoryRepository.GetCategoriesProductsPagedList(categoriesParameters);
+            }
+            else
+            {
+                categories = _unitOfWork.CategoryRepository.GetCategoriesPagedList(categoriesParameters);
+            }
 
             if (categories == null)
             {

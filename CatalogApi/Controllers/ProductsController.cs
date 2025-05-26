@@ -32,9 +32,9 @@ namespace CatalogApi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ServiceFilter(typeof(LoggingFilter))]
-        public ActionResult<IEnumerable<ProductResponse>> Get([FromQuery ]ProductsParameters productsParameters)
+        public ActionResult<IEnumerable<ProductResponse>> Get([FromQuery] ProductsParameters productsParameters)
         {
-            var products = _unitOfWork.ProductRepository.GetProducts(productsParameters);
+            PagedList<Product> products = _unitOfWork.ProductRepository.GetProductsPagedList(productsParameters);
 
             if (products == null)
             {
