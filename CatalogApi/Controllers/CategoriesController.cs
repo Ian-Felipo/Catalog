@@ -4,9 +4,11 @@ using CatalogApi.DTOs;
 using CatalogApi.Interfaces;
 using CatalogApi.Mappers;
 using CatalogApi.Models;
+using CatalogApi.Pagination;
 using CatalogApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace CatalogApi.Controllers
 {
@@ -24,14 +26,26 @@ namespace CatalogApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<CategoryResponse>> GetCategories(bool products = false)
+        public ActionResult<IEnumerable<CategoryResponse>> GetCategories([FromQuery] CategoriesParameters categoriesParameters, [FromQuery] bool products = false)
         {
-            IEnumerable<Category> categories = products ? _unitOfWork.CategoryRepository.GetCategoriesProducts() : _unitOfWork.CategoryRepository.GetAll();
+            var categories = products ? _unitOfWork.CategoryRepository.GetCategoriesProducts(categoriesParameters) : _unitOfWork.CategoryRepository.GetCategories(categoriesParameters);
 
             if (categories == null)
             {
                 return NotFound();
             }
+
+             var metadata = new
+            {
+                categories.TotalCount,
+                categories.PageSize,
+                categories.CurrentPage,
+                categories.TotalPages,
+                categories.HasPrevious,
+                categories.HasNext
+            };
+
+            Response.Headers.Append("X-Pagination", JsonConvert.SerializeObject(metadata));
 
             IEnumerable<CategoryResponse> categoriesResponses = categories.Select(category => category.CategoryToCategoryResponse());
 
