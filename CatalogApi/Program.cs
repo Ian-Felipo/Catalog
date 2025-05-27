@@ -5,6 +5,7 @@ using CatalogApi.Extensions;
 using CatalogApi.Filters;
 using CatalogApi.Interfaces;
 using CatalogApi.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,8 @@ builder.Services.AddDbContext<CatalogApiDbContext>(options =>
         options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
     }
 );
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CatalogApiDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddScoped<LoggingFilter>();
 
