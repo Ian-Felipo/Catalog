@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using APICatalogo.Services;
 using CatalogApi.AutoMappers;
 using CatalogApi.Data;
 using CatalogApi.Extensions;
@@ -20,6 +21,7 @@ builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ITokenService,TokenService>();
 builder.Services.AddAutoMapper(typeof(CategoryMapperProfile), typeof(ProductMapperProfile));
 builder.Services.AddAuthorization();
 
