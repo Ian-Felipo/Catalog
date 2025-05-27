@@ -16,7 +16,9 @@ builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddAutoMapper(typeof(CategoryMapperProfile), typeof(ProductMapperProfile)); 
+builder.Services.AddAutoMapper(typeof(CategoryMapperProfile), typeof(ProductMapperProfile));
+builder.Services.AddAuthentication("Bearer").AddBearerToken();
+builder.Services.AddAuthorization();
 
 builder.Services.AddControllers(options =>
     {

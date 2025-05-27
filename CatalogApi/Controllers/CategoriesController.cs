@@ -102,7 +102,7 @@ namespace CatalogApi.Controllers
             _unitOfWork.CategoryRepository.Post(category);
             await _unitOfWork.CommitAsync();
             CategoryResponse categoryResponse = category.CategoryToCategoryResponse();
-            return CreatedAtRoute("GetCategory", new { id = category.Id }, categoryResponse);
+            return CreatedAtRoute("GetById", new { id = category.Id }, categoryResponse);
         }
 
         [HttpPut("{id:int:min(1)}")]
