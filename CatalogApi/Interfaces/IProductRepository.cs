@@ -5,6 +5,6 @@ namespace CatalogApi.Interfaces;
 
 public interface IProductRepository : IRepository<Product>
 {
-    PagedList<Product> GetProductsPagedList(ProductsParameters productsParameters);
-    PagedList<Product> GetProductsPagedListFilterPrice(ProductsFilterPrice productsFilterPrice);
+    Task<PagedList<Product>> GetProductsPagedListAsync(ProductsParameters productsParameters);
+    Task<PagedList<Product>> GetProductsPagedListFilterPriceAsync(ProductsFilterPrice productsFilterPrice);
 }

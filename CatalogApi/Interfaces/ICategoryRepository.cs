@@ -7,8 +7,8 @@ namespace CatalogApi.Interfaces;
 
 public interface ICategoryRepository : IRepository<Category>
 {
-    IEnumerable<Category> GetAllWithProducts();
-    Category? GetWithProducts(int id);
-    PagedList<Category> GetPagedList(CategoriesParameters productsParameters);
-    PagedList<Category> GetPagedListFilterName(CategoriesFilterName categoriesFilterName);
+    Task<IEnumerable<Category>> GetAllWithProductsAsync();
+    Task<Category?> GetWithProductsAsync(int id);
+    Task<PagedList<Category>> GetPagedListAsync(CategoriesParameters productsParameters);
+    Task<PagedList<Category>> GetPagedListFilterNameAsync(CategoriesFilterName categoriesFilterName);
 }

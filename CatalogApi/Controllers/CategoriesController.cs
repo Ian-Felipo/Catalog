@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using AutoMapper;
 using CatalogApi.Data;
 using CatalogApi.DTOs;
@@ -51,27 +52,36 @@ namespace CatalogApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<CategoryResponse>> Get([FromQuery] CategoriesParameters categoriesParameters)
+        public async Task<ActionResult<IEnumerable<CategoryResponse>>> Get([FromQuery] CategoriesParameters categoriesParameters)
         {
-            PagedList<Category> categories = _unitOfWork.CategoryRepository.GetPagedList(categoriesParameters);
+            PagedList<Category> categories = await _unitOfWork.CategoryRepository.GetPagedListAsync(categoriesParameters);
             return Get(categories);
         }
 
         [HttpGet("Filter/Name")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<CategoryResponse>> Get([FromQuery] CategoriesFilterName categoriesFilterName)
+        public async Task<ActionResult<IEnumerable<CategoryResponse>>> Get([FromQuery] CategoriesFilterName categoriesFilterName)
         {
-            PagedList<Category> categories = _unitOfWork.CategoryRepository.GetPagedListFilterName(categoriesFilterName);
+            PagedList<Category> categories = await _unitOfWork.CategoryRepository.GetPagedListFilterNameAsync(categoriesFilterName);
             return Get(categories);
         }
 
-        [HttpGet("{id:int:min(1)}", Name = "GetCategory")]
+        [HttpGet("{id:int:min(1)}", Name = "GetById")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<CategoryResponse> GetCategory(int id, bool products = false)
+        public async Task<ActionResult<CategoryResponse>> GetById(int id, bool products = false)
         {
-            Category? category = products ? _unitOfWork.CategoryRepository.GetWithProducts(id) : _unitOfWork.CategoryRepository.Get(category => category.Id == id);
+            Category? category;
+
+            if (products)
+            {
+                category = await _unitOfWork.CategoryRepository.GetWithProductsAsync(id); 
+            }
+            else
+            {
+                category = await _unitOfWork.CategoryRepository.GetAsync(category => category.Id == id);
+            }
 
             if (category == null)
             {
@@ -86,11 +96,11 @@ namespace CatalogApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<CategoryResponse> Post(CategoryRequest categoryRequest)
+        public async Task<ActionResult<CategoryResponse>> Post(CategoryRequest categoryRequest)
         {
             Category category = categoryRequest.CategoryRequestToCategory();
             _unitOfWork.CategoryRepository.Post(category);
-            _unitOfWork.Commit();
+            await _unitOfWork.CommitAsync();
             CategoryResponse categoryResponse = category.CategoryToCategoryResponse();
             return CreatedAtRoute("GetCategory", new { id = category.Id }, categoryResponse);
         }
@@ -98,11 +108,11 @@ namespace CatalogApi.Controllers
         [HttpPut("{id:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<CategoryResponse> Put(int id, CategoryRequest categoryRequest)
+        public async Task<ActionResult<CategoryResponse>> Put(int id, CategoryRequest categoryRequest)
         {
             Category category = categoryRequest.CategoryRequestToCategory(id);
             _unitOfWork.CategoryRepository.Put(category);
-            _unitOfWork.Commit();
+            await _unitOfWork.CommitAsync();
             CategoryResponse categoryResponse = category.CategoryToCategoryResponse();
             return Ok(categoryResponse);   
         }
@@ -110,9 +120,9 @@ namespace CatalogApi.Controllers
         [HttpDelete("{id:int:min(1)}")]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<CategoryResponse> Delete(int id)
+        public async Task<ActionResult<CategoryResponse>> Delete(int id)
         {
-            Category? category = _unitOfWork.CategoryRepository.Get(category => category.Id == id);
+            Category? category = await _unitOfWork.CategoryRepository.GetAsync(category => category.Id == id);
 
             if (category == null)
             {
@@ -120,7 +130,7 @@ namespace CatalogApi.Controllers
             }
 
             _unitOfWork.CategoryRepository.Delete(category);
-            _unitOfWork.Commit();
+            await _unitOfWork.CommitAsync();
 
             CategoryResponse categoryResponse = category.CategoryToCategoryResponse();
 

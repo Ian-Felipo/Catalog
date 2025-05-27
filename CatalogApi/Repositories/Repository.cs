@@ -14,14 +14,14 @@ public class Repository<T> : IRepository<T> where T : class
         _catalogApiDbContext = catalogApiDbContext;
     }
 
-    public IEnumerable<T> GetAll()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return _catalogApiDbContext.Set<T>().AsNoTracking().ToList();
+        return await _catalogApiDbContext.Set<T>().AsNoTracking().ToListAsync();
     }
 
-    public T? Get(Expression<Func<T,bool>> predicado)
+    public async Task<T?> GetAsync(Expression<Func<T,bool>> predicado)
     {
-        return _catalogApiDbContext.Set<T>().AsNoTracking().FirstOrDefault(predicado);
+        return await _catalogApiDbContext.Set<T>().AsNoTracking().FirstOrDefaultAsync(predicado);
     }
 
     public T Post(T entity)

@@ -30,9 +30,9 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public void Commit()
+    public async Task CommitAsync()
     {
-        _catalogApiDbContext.SaveChanges();
+        await _catalogApiDbContext.SaveChangesAsync();
     }
 
     public void Dispose()
