@@ -5,6 +5,7 @@ using CatalogApi.Data;
 using CatalogApi.Extensions;
 using CatalogApi.Filters;
 using CatalogApi.Interfaces;
+using CatalogApi.Models;
 using CatalogApi.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -60,7 +61,7 @@ builder.Services.AddAuthentication(options =>
     }
 ).AddBearerToken();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CatalogApiDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<CatalogApiDbContext>().AddDefaultTokenProviders();
 
 builder.Services.AddScoped<LoggingFilter>();
 
