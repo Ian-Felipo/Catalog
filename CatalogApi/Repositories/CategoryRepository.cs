@@ -37,7 +37,7 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
 
         if (!string.IsNullOrEmpty(categoriesFilterName.Name))
         {
-            categories = categories.AsQueryable().Where(category => category.Name.Contains(categoriesFilterName.Name));
+            categories = categories.AsQueryable().Where(category => category.Name!.Contains(categoriesFilterName.Name));
         }
 
         return PagedList<Category>.ToPagedList(categories.AsQueryable(), categoriesFilterName.PageNumber, categoriesFilterName.PageSize);

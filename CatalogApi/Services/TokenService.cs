@@ -42,7 +42,7 @@ public class TokenService : ITokenService
         return refreshToken;
     }
 
-    public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, IConfiguration _config)
+    public ClaimsPrincipal GetClaimsPrincipalFromExpiredAccessToken(string token, IConfiguration _config)
     {
         var secretKey = _config["JWT:SecretKey"] ?? throw new InvalidOperationException("Invalid key");
 
@@ -66,5 +66,4 @@ public class TokenService : ITokenService
 
         return principal;
     }
-
 }
