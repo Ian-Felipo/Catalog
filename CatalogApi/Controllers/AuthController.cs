@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.AccessControl;
 using System.Security.Claims;
 using APICatalogo.Services;
 using CatalogApi.DTOs;
@@ -94,4 +95,32 @@ public class AuthController : ControllerBase
 
         return Ok(new Response { Status = "Ok", Message = "Usuario Criado com sucesso!" });
     }
+
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken(Token token)
+    {
+        ClaimsPrincipal claimsPrincipal = _tokenService.GetClaimsPrincipalFromExpiredAccessToken(token.AccessToken!, _configuration);
+
+        if (claimsPrincipal == null)
+        {
+            return BadRequest();
+        }
+
+        User? user = await _userManager.FindByNameAsync(claimsPrincipal.Identity.Name);
+
+        if (user == null || user.RefreshToken != token.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+        {
+            return BadRequest();
+        }
+
+        JwtSecurityToken accessToken = _tokenService.GenerateAccessToken(claimsPrincipal.Claims.ToList(), _configuration);
+
+        string refreshToken = _tokenService.GenerateRefreshToken();
+
+        user.RefreshToken = refreshToken;
+
+        await _userManager.UpdateAsync(user);
+
+        return new ObjectResult(new { AccessToken = new JwtSecurityTokenHandler().WriteToken(accessToken), RefreshToken = refreshToken });
+    } 
 }
