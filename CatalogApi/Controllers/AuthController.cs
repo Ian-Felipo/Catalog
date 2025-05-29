@@ -1,9 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.AccessControl;
 using System.Security.Claims;
 using APICatalogo.Services;
 using CatalogApi.DTOs;
 using CatalogApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -106,7 +108,7 @@ public class AuthController : ControllerBase
             return BadRequest();
         }
 
-        User? user = await _userManager.FindByNameAsync(claimsPrincipal.Identity.Name);
+        User? user = await _userManager.FindByNameAsync(claimsPrincipal.Identity!.Name!);
 
         if (user == null || user.RefreshToken != token.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
         {
@@ -122,5 +124,24 @@ public class AuthController : ControllerBase
         await _userManager.UpdateAsync(user);
 
         return new ObjectResult(new { AccessToken = new JwtSecurityTokenHandler().WriteToken(accessToken), RefreshToken = refreshToken });
-    } 
+    }
+
+    [Authorize]
+    [HttpPost("revoke/{username}")]
+    public async Task<IActionResult> Revoke(string username)
+    {
+        User? user = await _userManager.FindByNameAsync(username);
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        user.RefreshToken = null;
+
+        await _userManager.UpdateAsync(user);
+
+        return NoContent();
+    }
+    
 }
