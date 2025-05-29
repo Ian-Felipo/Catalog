@@ -130,11 +130,13 @@ public class AuthController : ControllerBase
     [HttpPost("revoke/{username}")]
     public async Task<IActionResult> Revoke(string username)
     {
+        Console.WriteLine(username);
+
         User? user = await _userManager.FindByNameAsync(username);
 
         if (user == null)
         {
-            return NotFound();
+            return NotFound(username);
         }
 
         user.RefreshToken = null;
@@ -143,5 +145,4 @@ public class AuthController : ControllerBase
 
         return NoContent();
     }
-    
 }

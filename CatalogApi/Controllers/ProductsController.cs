@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using CatalogApi.Pagination;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CatalogApi.Controllers
 {
@@ -48,6 +49,7 @@ namespace CatalogApi.Controllers
             return Ok(productResponses);
         }
 
+        [Authorize] //////////////////////////////////////////////////////
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
