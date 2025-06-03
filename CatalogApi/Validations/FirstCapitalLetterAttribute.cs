@@ -11,7 +11,7 @@ public class FirstCapitalLetterAttribute : ValidationAttribute
             return ValidationResult.Success;
         }
 
-        var firstCapital = value.ToString()[0].ToString();
+        var firstCapital = value.ToString()![0].ToString();
 
         if (firstCapital != firstCapital.ToUpper())
         {
