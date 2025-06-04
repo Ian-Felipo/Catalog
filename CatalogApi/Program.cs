@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using CatalogApi.AutoMappers;
 using CatalogApi.Data;
 using CatalogApi.Interfaces;
+using CatalogApi.Models;
 using CatalogApi.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -31,7 +32,7 @@ builder.Services.AddDbContext<CatalogApiDbContext>(options =>
     }
 );
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<CatalogApiDbContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<CatalogApiDbContext>().AddDefaultTokenProviders();
 
 var secretKey = builder.Configuration["JWT:SecretKey"] ?? throw new ArgumentException("Invalid secret key!!");
 
