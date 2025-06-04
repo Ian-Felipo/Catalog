@@ -95,6 +95,44 @@ public class AuthController : ControllerBase
             Message = result.Succeeded ? "User Created" : "User Creation Failed"
         };
 
-        return Ok(result);
+        if (!result.Succeeded)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, registerResponse);
+        }
+
+        return Ok(registerResponse);
+    }
+
+    [HttpPost("Refresh-Token")]
+    public async Task<IActionResult> RefreshToken(LoginResponse loginResponse)
+    {
+        ClaimsPrincipal claims = _tokenService.GetClaimsPrincipalFromExpiredAccessToken(loginResponse.AccessToken!, _configuration);
+
+        string username = claims.Identity!.Name!;
+
+        User? user = await _userManager.FindByNameAsync(username);
+
+        if (user == null)
+        {
+            return BadRequest();
+        }
+
+        string accessToken = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateAccessToken(claims.Claims, _configuration));
+
+        string refreshToken = _tokenService.GenerateRefreshToken();
+
+        int refreshTokenValidityInMinutes = int.Parse(_configuration["JWT:RefreshTokenValidityInMinutes"]!);
+
+        user.RefreshToken = refreshToken;
+
+        user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(refreshTokenValidityInMinutes);
+
+        LoginResponse newLoginResponse = new LoginResponse
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
+        };
+
+        return Ok(loginResponse);
     }
 }
