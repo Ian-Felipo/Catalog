@@ -1,9 +1,10 @@
 using CatalogApi.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogApi.Data;
 
-public class CatalogApiDbContext : DbContext
+public class CatalogApiDbContext : IdentityDbContext
 {
     public CatalogApiDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
     {

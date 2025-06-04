@@ -1,13 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using CatalogApi.Models;
-using CatalogApi.Filters;
 using CatalogApi.Interfaces;
 using AutoMapper;
 using CatalogApi.DTOs;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using CatalogApi.Pagination;
-using System.Threading.Tasks;
 
 namespace CatalogApi.Controllers
 {
