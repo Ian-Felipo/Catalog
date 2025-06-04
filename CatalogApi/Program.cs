@@ -5,6 +5,7 @@ using CatalogApi.Data;
 using CatalogApi.Interfaces;
 using CatalogApi.Models;
 using CatalogApi.Repositories;
+using CatalogApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IProductRepository,ProductRepository>();
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+builder.Services.AddScoped<ITokenService,TokenService>();
+builder.Services.AddScoped(typeof(IRepository<>),typeof(Repository<>));
 
 builder.Services.AddAutoMapper(typeof(CategoryMapperProfile), typeof(ProductMapperProfile)); 
 
