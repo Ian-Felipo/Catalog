@@ -1,15 +1,9 @@
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using AutoMapper;
-using CatalogApi.Data;
 using CatalogApi.DTOs;
 using CatalogApi.Interfaces;
 using CatalogApi.Mappers;
 using CatalogApi.Models;
 using CatalogApi.Pagination;
-using CatalogApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace CatalogApi.Controllers
