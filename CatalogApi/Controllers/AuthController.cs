@@ -3,6 +3,7 @@ using System.Security.Claims;
 using CatalogApi.DTOs;
 using CatalogApi.Models;
 using CatalogApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -132,5 +133,23 @@ public class AuthController : ControllerBase
         };
 
         return Ok(loginResponse);
+    }
+
+    [Authorize]
+    [HttpPost("Revoke/{username}")]
+    public async Task<IActionResult> Revoke(string username)
+    {
+        User? user = await _userManager.FindByNameAsync(username);
+
+        if (user == null)
+        {
+            return BadRequest();
+        }
+
+        user.RefreshToken = null;
+
+        await _userManager.UpdateAsync(user);
+
+        return Ok();
     }
 }
