@@ -5,7 +5,6 @@ using CatalogApi.Models;
 using CatalogApi.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CatalogApi.Controllers;
 
@@ -67,7 +66,35 @@ public class AuthController : ControllerBase
             AccessToken = accessToken,
             RefreshToken = refreshToken
         };
-        
+
         return Ok(loginResponse);
+    }
+
+    [HttpPost("Register")]
+    public async Task<IActionResult> Register(RegisterRequest registerRequest)
+    {
+        User? user = await _userManager.FindByNameAsync(registerRequest.Username!);
+
+        if (user != null)
+        {
+            return BadRequest();
+        }
+
+        User registeredUser = new User
+        {
+            UserName = registerRequest.Username,
+            Email = registerRequest.Email,
+            SecurityStamp = Guid.NewGuid().ToString()
+        };
+
+        var result = await _userManager.CreateAsync(registeredUser, registerRequest.Password!);
+
+        RegisterResponse registerResponse = new RegisterResponse
+        {
+            Status = result.Succeeded ? "Success" : "Error",
+            Message = result.Succeeded ? "User Created" : "User Creation Failed"
+        };
+
+        return Ok(result);
     }
 }
