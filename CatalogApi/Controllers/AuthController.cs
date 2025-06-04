@@ -112,20 +112,18 @@ public class AuthController : ControllerBase
 
         User? user = await _userManager.FindByNameAsync(username);
 
-        if (user == null)
+        if (user == null || user.RefreshToken != loginResponse.RefreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
         {
             return BadRequest();
         }
 
-        string accessToken = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateAccessToken(claims.Claims, _configuration));
+        string accessToken = new JwtSecurityTokenHandler().WriteToken(_tokenService.GenerateAccessToken(claims.Claims.ToList(), _configuration));
 
         string refreshToken = _tokenService.GenerateRefreshToken();
 
-        int refreshTokenValidityInMinutes = int.Parse(_configuration["JWT:RefreshTokenValidityInMinutes"]!);
-
         user.RefreshToken = refreshToken;
 
-        user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(refreshTokenValidityInMinutes);
+        await _userManager.UpdateAsync(user);
 
         LoginResponse newLoginResponse = new LoginResponse
         {
