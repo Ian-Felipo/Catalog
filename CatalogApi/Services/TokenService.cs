@@ -24,8 +24,11 @@ public class TokenService : ITokenService
             Issuer = _config.GetSection("JWT").GetValue<string>("ValidIssuer"),
             SigningCredentials = signingCredentials
         };
+
         var tokenHandler = new JwtSecurityTokenHandler();
+        
         var token = tokenHandler.CreateJwtSecurityToken(tokenDescriptor);
+
         return token;
     }
 
