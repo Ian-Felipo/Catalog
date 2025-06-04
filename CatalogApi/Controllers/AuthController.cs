@@ -132,7 +132,7 @@ public class AuthController : ControllerBase
             RefreshToken = refreshToken
         };
 
-        return Ok(loginResponse);
+        return Ok(newLoginResponse);
     }
 
     [Authorize]
