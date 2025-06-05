@@ -152,4 +152,26 @@ public class AuthController : ControllerBase
 
         return Ok();
     }
+
+    [HttpPost("Create-Role")]
+    public async Task<IActionResult> CreateRole(string roleName)
+    {
+        bool role = await _roleManager.RoleExistsAsync(roleName);
+
+        if (role)
+        {
+            return BadRequest("Role Exists!"); 
+        }
+
+        IdentityRole newRole = new IdentityRole(roleName);
+
+        var result = await _roleManager.CreateAsync(newRole);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest();
+        }
+
+        return Ok($"{roleName} criada com sucesso");
+    }
 }
