@@ -6,6 +6,7 @@ using CatalogApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace CatalogApi.Controllers;
 
@@ -160,7 +161,7 @@ public class AuthController : ControllerBase
 
         if (role)
         {
-            return BadRequest("Role Exists!"); 
+            return BadRequest("Role Exists!");
         }
 
         IdentityRole newRole = new IdentityRole(roleName);
@@ -173,5 +174,25 @@ public class AuthController : ControllerBase
         }
 
         return Ok($"{roleName} criada com sucesso");
+    }
+
+    [HttpPost("Add-User-To-Role")]
+    public async Task<IActionResult> AddUserToRole(string username, string roleName)
+    {
+        User? user = await _userManager.FindByNameAsync(username);
+
+        if (user == null)
+        {
+            return BadRequest("Usuario nao existe");
+        }
+
+        var result = await _userManager.AddToRoleAsync(user, roleName);
+
+        if (!result.Succeeded)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "A atribuição falhou!");
+        }
+
+        return Ok($"Role '{roleName}' atribuida ao usuario '{username}' com sucesso!");
     }
 }
