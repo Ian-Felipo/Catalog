@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using CatalogApi.AutoMappers;
@@ -92,6 +93,15 @@ builder.Services.AddSwaggerGen(c =>
                 }
             }
         );
+    }
+);
+
+builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+        options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+        options.AddPolicy("SuperAdminOnly", policy => policy.RequireRole("SuperAdmin"));
+        options.AddPolicy("ExclusiveOnly", policy => policy.RequireAssertion(context => context.User.HasClaim(claim => claim.Type == "id" && claim.Value == "Naruto")));
     }
 );
 
