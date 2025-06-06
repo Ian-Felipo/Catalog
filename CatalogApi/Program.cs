@@ -102,6 +102,18 @@ builder.Services.AddAuthorization(options =>
     }
 );
 
+var SourcesWithAllowedAccess = "_sourcesWithAllowedAccess";
+
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy(name: SourcesWithAllowedAccess, policy =>
+            {
+                policy.WithOrigins("https://apirequest.io");
+            }
+        );
+    }
+);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -111,6 +123,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors(SourcesWithAllowedAccess);
 app.UseAuthentication();
 app.UseAuthorization(); 
 app.MapControllers();
