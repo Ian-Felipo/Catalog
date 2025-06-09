@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using CatalogApi.AutoMappers;
 using CatalogApi.Data;
 using CatalogApi.Interfaces;
@@ -8,6 +9,7 @@ using CatalogApi.Repositories;
 using CatalogApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -102,15 +104,34 @@ builder.Services.AddAuthorization(options =>
     }
 );
 
-var SourcesWithAllowedAccess = "_sourcesWithAllowedAccess";
-
 builder.Services.AddCors(options =>
     {
-        options.AddPolicy(name: SourcesWithAllowedAccess, policy =>
+        options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("https://apirequest.io");
+                policy.WithOrigins("https://apirequest.io").WithMethods("GET").AllowAnyHeader();
+            }
+
+        );
+        options.AddPolicy("SourcesWithAllowedAccess", policy =>
+            {
+                policy.WithOrigins("https://apirequest.io", "http://localhost:5250").WithMethods("GET", "POST", "PUT", "DELETE").AllowAnyHeader();
             }
         );
+    }
+);
+
+builder.Services.AddRateLimiter(options =>
+    {
+        options.AddFixedWindowLimiter("FixedWindowLimiter", policy =>
+            {
+                policy.PermitLimit = 1;
+                policy.QueueLimit = 0;
+                policy.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                policy.Window = TimeSpan.FromSeconds(5);
+            }
+        );
+        PartitionedRateLimiter
+        options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     }
 );
 
@@ -123,9 +144,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseCors(SourcesWithAllowedAccess);
+app.UseRateLimiter();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization(); 
 app.MapControllers();

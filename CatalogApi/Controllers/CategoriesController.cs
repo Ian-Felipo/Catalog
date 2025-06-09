@@ -3,6 +3,7 @@ using CatalogApi.Interfaces;
 using CatalogApi.Mappers;
 using CatalogApi.Models;
 using CatalogApi.Pagination;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
