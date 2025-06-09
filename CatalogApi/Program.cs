@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using Asp.Versioning;
 using CatalogApi.AutoMappers;
 using CatalogApi.Data;
 using CatalogApi.Interfaces;
@@ -141,7 +142,41 @@ builder.Services.AddRateLimiter(options =>
                 policy.Window = TimeSpan.FromSeconds(5);
             }
         );
+        options.AddSlidingWindowLimiter("slidingWindowLimiter", policy =>
+            {
+                policy.PermitLimit = 8;
+                policy.QueueLimit = 2;
+                policy.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                policy.SegmentsPerWindow = 5;
+                policy.Window = TimeSpan.FromSeconds(10);
+            }
+        );
+        options.AddConcurrencyLimiter("concurrencyLimiter", policy =>
+            {
+
+            }
+        );
+        options.AddTokenBucketLimiter("tokenBucketLimiter", policy =>
+            {
+
+            }
+        );
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    }
+);
+
+builder.Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1, 0, "Ok");
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = ApiVersionReader.Combine(new QueryStringApiVersionReader("version"), new UrlSegmentApiVersionReader());
+        options.UnsupportedApiVersionStatusCode = StatusCodes.Status403Forbidden;
+    }
+).AddApiExplorer(options =>
+    {
+        options.GroupNameFormat = "'v'VVV";
+        options.SubstituteApiVersionInUrl = true;
     }
 );
 

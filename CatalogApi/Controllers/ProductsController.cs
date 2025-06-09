@@ -6,10 +6,12 @@ using CatalogApi.DTOs;
 using Microsoft.AspNetCore.JsonPatch;
 using Newtonsoft.Json;
 using CatalogApi.Pagination;
+using Asp.Versioning;
 
 namespace CatalogApi.Controllers
 {
-    [Route("[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class ProductsController : ControllerBase
     {

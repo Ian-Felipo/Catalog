@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Asp.Versioning;
 using CatalogApi.DTOs;
 using CatalogApi.Models;
 using CatalogApi.Services;
@@ -10,7 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace CatalogApi.Controllers;
 
-[Route("[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
 public class AuthController : ControllerBase
 {

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using CatalogApi.DTOs;
 using CatalogApi.Interfaces;
 using CatalogApi.Mappers;
@@ -9,7 +10,8 @@ using Newtonsoft.Json;
 
 namespace CatalogApi.Controllers
 {
-    [Route("[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
     {
@@ -97,7 +99,7 @@ namespace CatalogApi.Controllers
             _unitOfWork.CategoryRepository.Post(category);
             await _unitOfWork.CommitAsync();
             CategoryResponse categoryResponse = category.CategoryToCategoryResponse();
-            return CreatedAtRoute("GetCategory", new { id = category.Id }, categoryResponse);
+            return CreatedAtRoute("GetById", new { id = category.Id }, categoryResponse);
         }
 
         [HttpPut("{id:int:min(1)}")]
