@@ -122,6 +122,17 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddRateLimiter(options =>
     {
+        options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext,string>(httpContext => RateLimitPartition.GetFixedWindowLimiter(
+                httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
+                partition => new FixedWindowRateLimiterOptions
+                {
+                    AutoReplenishment = true,
+                    PermitLimit = 5,
+                    QueueLimit = 0,
+                    Window = TimeSpan.FromSeconds(5)
+                }    
+            )
+        );
         options.AddFixedWindowLimiter("FixedWindowLimiter", policy =>
             {
                 policy.PermitLimit = 1;
@@ -130,7 +141,6 @@ builder.Services.AddRateLimiter(options =>
                 policy.Window = TimeSpan.FromSeconds(5);
             }
         );
-        PartitionedRateLimiter
         options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
     }
 );
