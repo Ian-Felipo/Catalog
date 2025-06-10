@@ -7,9 +7,13 @@ using CatalogApi.Pagination;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace CatalogApi.Controllers
 {
+    /// <summary>
+    /// Controlador das Categorias
+    /// </summary>
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
@@ -46,6 +50,11 @@ namespace CatalogApi.Controllers
             return Ok(categoriesResponses);
         }
 
+        /// <summary>
+        /// Metodo Action que retorna uma pagina de categorias
+        /// </summary>
+        /// <param name="categoriesParameters">Eh uma lista de parametros referentes a paginacao, alem de um bool products</param>
+        /// <returns>Um Codigo de Status 200 mais uma pagina de categorias ou um codigo de erro 404</returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -93,6 +102,8 @@ namespace CatalogApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesDefaultResponseType]
         public async Task<ActionResult<CategoryResponse>> Post(CategoryRequest categoryRequest)
         {
             Category category = categoryRequest.CategoryRequestToCategory();

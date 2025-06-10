@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
@@ -16,8 +17,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<ICategoryRepository,CategoryRepository>();
 builder.Services.AddScoped<IProductRepository,ProductRepository>();
@@ -65,17 +64,28 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "apicatalogo", Version = "v1" });
+        c.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "CatalogApi",
+            Version = "1.0.0",
+            Description = ".....",
+            Contact = new OpenApiContact
+            {
+                Name = "Ian Felipo",
+                Email = "ianfelippo2@gmail.com"
+            }
+        }
+        );
 
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
-            {
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer",
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Description = "Bearer JWT ",
-            }
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Bearer JWT ",
+        }
         );
 
         c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -93,6 +103,9 @@ builder.Services.AddSwaggerGen(c =>
                 }
             }
         );
+        
+        var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
     }
 );
 
