@@ -27,4 +27,8 @@
     <ProjectReference Include="..\CatalogApi\CatalogApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
 </Project>
