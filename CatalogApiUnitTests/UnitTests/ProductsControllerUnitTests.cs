@@ -1,3 +1,11 @@
+using AutoMapper;
+using CatalogApi.AutoMappers;
+using CatalogApi.Data;
+using CatalogApi.Interfaces;
+using CatalogApi.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 namespace CatalogApiUnitTests.UnitTests;
 
 public class ProductsControllerUnitTests
@@ -6,20 +14,22 @@ public class ProductsControllerUnitTests
     public IMapper mapper;
     public static DbContextOptions<CatalogApiDbContext> dbContextOptions { get; }
 
-    static ProdutosUnitTestController()
+    public static string connectionString = new ConfigurationBuilder().AddUserSecrets("e6b54ad8-5553-489a-9092-b8901ecc18cc").Build()["ConnectionStrings:MySql"]!;
+    
+    static ProductsControllerUnitTests()
     {
         dbContextOptions = new DbContextOptionsBuilder<CatalogApiDbContext>().UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)).Options;
     }
 
-    public ProdutosUnitTestController()
+    public ProductsControllerUnitTests()
     {
-        var config = new MapperConfiguration(cfg =>
+        var mapperConfiguration = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new ProdutoDTOMappingProfile());
+                cfg.AddProfile(new ProductMapperProfile());
             }
         );
-        mapper = config.CreateMapper();
-        var context = new AppDbContext(dbContextOptions);
-        repository = new UnitOfWork(context);
+        mapper = mapperConfiguration.CreateMapper();
+        var context = new CatalogApiDbContext(dbContextOptions);
+        unitOfWork = new UnitOfWork(context);
     }
 }
