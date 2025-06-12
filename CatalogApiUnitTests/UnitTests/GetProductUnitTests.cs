@@ -1,4 +1,5 @@
 using CatalogApi.Controllers;
+using CatalogApi.DTOs;
 using CatalogApi.Pagination;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -115,10 +116,13 @@ public class GetProductUnitTests : IClassFixture<ProductsControllerUnitTests>
 
         var result = Assert.IsType<OkObjectResult>(products.Result);
         Assert.Equal(200, result.StatusCode);
+        var value = Assert.IsAssignableFrom<IEnumerable<ProductResponse>>(result.Value);
+        Assert.NotNull(value);
 
         // Assert Fluent
 
         products.Result.Should().BeOfType<OkObjectResult>().Which.StatusCode.Should().Be(200);
+        products.Result.Should().BeOfType<OkObjectResult>().Which.Value.Should().BeAssignableTo<IEnumerable<ProductResponse>>().And.NotBeNull();
     }
 
     [Theory]
