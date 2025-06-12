@@ -12,8 +12,8 @@ public class ProductsControllerUnitTests
 {
     public readonly IUnitOfWork unitOfWork;
     public readonly IMapper mapper;
-    public readonly static DbContextOptions<CatalogApiDbContext> dbContextOptions;
-    public readonly static string connectionString = new ConfigurationBuilder().AddUserSecrets("e6b54ad8-5553-489a-9092-b8901ecc18cc").Build()["ConnectionStrings:MySql"]!;
+    private readonly static DbContextOptions<CatalogApiDbContext> dbContextOptions;
+    private readonly static string connectionString = new ConfigurationBuilder().AddUserSecrets("e6b54ad8-5553-489a-9092-b8901ecc18cc").Build()["ConnectionStrings:MySql"]!;
     
     static ProductsControllerUnitTests()
     {

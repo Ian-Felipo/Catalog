@@ -1,7 +1,5 @@
 using CatalogApi.Controllers;
 using CatalogApi.DTOs;
-using CatalogApi.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatalogApiUnitTests.UnitTests;
@@ -10,7 +8,7 @@ public class PostProductUnitTests : IClassFixture<ProductsControllerUnitTests>
 {
     private readonly ProductsController productsController;
 
-    PostProductUnitTests(ProductsControllerUnitTests productsControllerUnitTests)
+    public PostProductUnitTests(ProductsControllerUnitTests productsControllerUnitTests)
     {
         productsController = new ProductsController(productsControllerUnitTests.unitOfWork, productsControllerUnitTests.mapper);
     }
@@ -24,7 +22,9 @@ public class PostProductUnitTests : IClassFixture<ProductsControllerUnitTests>
         {
             Name = "Produto",
             Price = 1000.00M,
-            ImageUrl = "Produto.jpg"
+            ImageUrl = "Produto.jpg",
+            Description = "Produto Show",
+            CategoryId = 1
         };
 
         // Act
