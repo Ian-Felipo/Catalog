@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CatalogApi</name>
+    </assembly>
+    <members>
+        <member name="T:CatalogApi.Controllers.CategoriesController">
+            <summary>
+            Controlador das Categorias
+            </summary>
+        </member>
+        <member name="M:CatalogApi.Controllers.CategoriesController.Get(CatalogApi.Pagination.CategoriesParameters)">
+            <summary>
+            Metodo Action que retorna uma pagina de categorias
+            </summary>
+            <param name="categoriesParameters">Eh uma lista de parametros referentes a paginacao, alem de um bool products</param>
+            <returns>Um Codigo de Status 200 mais uma pagina de categorias ou um codigo de erro 404</returns>
+        </member>
+        <member name="T:CatalogApi.Migrations.Init">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.Init.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.Init.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.Init.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CatalogApi.Migrations.AddingDataAnnotations">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.AddingDataAnnotations.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.AddingDataAnnotations.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.AddingDataAnnotations.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CatalogApi.Migrations.GenerateDateInCategories">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.GenerateDateInCategories.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.GenerateDateInCategories.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.GenerateDateInCategories.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CatalogApi.Migrations.GenerateDateInProducts">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.GenerateDateInProducts.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.GenerateDateInProducts.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.GenerateDateInProducts.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CatalogApi.Migrations.CreateIdentityTables">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.CreateIdentityTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.CreateIdentityTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.CreateIdentityTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:CatalogApi.Migrations.AlterIdentityTables">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.AlterIdentityTables.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.AlterIdentityTables.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:CatalogApi.Migrations.AlterIdentityTables.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
