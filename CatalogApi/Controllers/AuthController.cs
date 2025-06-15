@@ -7,7 +7,6 @@ using CatalogApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace CatalogApi.Controllers;
 
@@ -30,6 +29,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("Login")]
+    
     public async Task<IActionResult> Login(LoginRequest loginRequest)
     {
         User? user = await _userManager.FindByNameAsync(loginRequest.Username!);
