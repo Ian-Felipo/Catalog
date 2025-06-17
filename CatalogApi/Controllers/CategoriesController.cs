@@ -25,6 +25,10 @@ public class CategoriesController : ControllerBase
         _memoryCache = memoryCache;
     }
 
+    private string GetCacheCategoryKey(int id) => $"CacheCategory_{id}";
+
+    private string SetCacheCategory() => 
+
     private ActionResult<IEnumerable<CategoryResponse>> Get(PagedList<Category> categories)
     {
         if (categories == null)
@@ -32,7 +36,7 @@ public class CategoriesController : ControllerBase
             return NotFound();
         }
 
-            var metadata = new
+        var metadata = new
         {
             categories.TotalCount,
             categories.PageSize,
@@ -132,10 +136,25 @@ public class CategoriesController : ControllerBase
     [ProducesDefaultResponseType]
     public async Task<ActionResult<CategoryResponse>> Post(CategoryRequest categoryRequest)
     {
+        _memoryCache.Remove(CacheCategoriesKey);
+
         Category category = categoryRequest.CategoryRequestToCategory();
+
+        string CacheCategoryKey = $"CacheCategory_{category.Id}";
+
+        var cacheOptions = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
+            SlidingExpiration = TimeSpan.FromSeconds(10),
+            Priority = CacheItemPriority.High
+        };
+
+        _memoryCache.Set(CacheCategoryKey, category, cacheOptions);
+
         _unitOfWork.CategoryRepository.Post(category);
         await _unitOfWork.CommitAsync();
         CategoryResponse categoryResponse = category.CategoryToCategoryResponse();
+
         return CreatedAtRoute("GetById", new { id = category.Id }, categoryResponse);
     }
 
@@ -144,10 +163,25 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<CategoryResponse>> Put(int id, CategoryRequest categoryRequest)
     {
+        _memoryCache.Remove(CacheCategoriesKey);
+
         Category category = categoryRequest.CategoryRequestToCategory(id);
+
+        string CacheCategoryKey = $"CacheCategory_{category.Id}";
+
+        var cacheOptions = new MemoryCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
+            SlidingExpiration = TimeSpan.FromSeconds(10),
+            Priority = CacheItemPriority.High
+        };
+
+        _memoryCache.Set(CacheCategoryKey, category, cacheOptions);
+
         _unitOfWork.CategoryRepository.Put(category);
         await _unitOfWork.CommitAsync();
         CategoryResponse categoryResponse = category.CategoryToCategoryResponse();
+
         return Ok(categoryResponse);   
     }
 
@@ -156,17 +190,28 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<CategoryResponse>> Delete(int id)
     {
-        Category? category = await _unitOfWork.CategoryRepository.GetAsync(category => category.Id == id);
+        string CacheCategoryKey = $"CacheCategory_{id}";
 
-        if (category == null)
+        if (!_memoryCache.TryGetValue(CacheCategoryKey, out Category? category))
         {
-            return NotFound();
+            category = await _unitOfWork.CategoryRepository.GetAsync(category => category.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+        }
+        else
+        {
+            _memoryCache.Remove(CacheCategoryKey);
         }
 
-        _unitOfWork.CategoryRepository.Delete(category);
+        _memoryCache.Remove(CacheCategoriesKey);
+
+        _unitOfWork.CategoryRepository.Delete(category!);
         await _unitOfWork.CommitAsync();
 
-        CategoryResponse categoryResponse = category.CategoryToCategoryResponse();
+        CategoryResponse categoryResponse = category!.CategoryToCategoryResponse();
 
         return Ok(categoryResponse);
     }
