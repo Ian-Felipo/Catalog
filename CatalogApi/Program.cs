@@ -193,6 +193,8 @@ builder.Services.AddApiVersioning(options =>
     }
 );
 
+builder.Services.AddMemoryCache();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
